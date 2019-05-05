@@ -21,7 +21,7 @@ class Config(object):
 
     max_epochs = 5
     pre_trained = False
-    batch_sz = 128
+    batch_sz = 256
     partial_update_until_epoch = 0
     vocab_sz = 19853
 
@@ -30,7 +30,7 @@ class Config(object):
 
     lr = 0.0001
     decay_steps = 1000
-    decay_rate = 0.9
+    decay_rate = 0.98
 
     dropout = 0.2
     reg = 0.
