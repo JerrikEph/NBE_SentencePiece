@@ -2,10 +2,10 @@ import argparse, sys, os, time, logging, threading, traceback, subprocess
 import numpy as np
 import tensorflow as tf
 import _pickle as pkl
-from .Config import Config
-from .model import model
-from .utils import utils
-from .LMdataset import Dataset
+from Config import Config
+from model import model
+from utils import utils
+from LMdataset import Dataset
 
 _REVISION = 'lm-basic'
 
