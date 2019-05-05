@@ -9,8 +9,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.contrib import layers
 
-from .utils import utils, nest
-from .utils.TfUtils import entry_stop_gradients, mkMask, reduce_avg, masked_softmax
+from utils import utils, nest
+from utils.TfUtils import entry_stop_gradients, mkMask, reduce_avg, masked_softmax
 
 NINF = -1e20
 EPSILON = 1e-10
