@@ -1,0 +1,10 @@
+*.pyc
+*.gz
+_*
+data
+data_*
+savings/
+.idea/*
+!.gitignore
+!__init__.py
+
