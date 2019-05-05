@@ -21,7 +21,7 @@ class Dataset:
         ds = ds.padded_batch(self.batch_size, (tf.TensorShape([None]),tf.TensorShape([None]),
                                                tf.TensorShape([None]),tf.TensorShape([])))
         ds = ds.map(lambda a, b, c, d: ({'f_wids': a, 'f_len': d}, {'l_fwd': b, 'l_bwd': c}))
-        ds = ds.prefetch(5)
+        ds = ds.prefetch(10)
 
         return ds
 

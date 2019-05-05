@@ -99,7 +99,7 @@ class Train:
                         batch_size=self.config.batch_sz, epoch=self.config.max_epochs)
         my_model = model(self.config)
 
-        if GPU_NUM >1:
+        if GPU_NUM > 1:
             strategy = tf.contrib.distribute.MirroredStrategy(num_gpus=GPU_NUM)
             config = tf.estimator.RunConfig(train_distribute=strategy)
 
