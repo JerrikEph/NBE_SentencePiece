@@ -11,7 +11,7 @@ _REVISION = 'lm-basic'
 
 parser = argparse.ArgumentParser(description="training options")
 
-parser.add_argument('--load-config', action='store_true', dest='load_config', default=False)
+parser.add_argument('--gen-config', action='store_true', dest='gen_config', default=False)
 parser.add_argument('--gpu-num', action='store', dest='gpu_num', default=0, type=int)
 parser.add_argument('--train-test', action='store', dest='train_test', default='train', choices=['train', 'test'])
 parser.add_argument('--weight-path', action='store', dest='weight_path', required=True)
@@ -53,7 +53,7 @@ class Train:
             self.args = args
             self.weight_path = args.weight_path
 
-            if args.load_config == False:
+            if args.gen_config:
                 config.saveConfig(self.weight_path + '/config')
                 print('default configuration generated, please specify --load-config and run again.')
                 gpu_lock.release()
