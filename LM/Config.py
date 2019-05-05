@@ -14,19 +14,19 @@ class Config(object):
 
     """General"""
     revision = 'lm-basic'
-    filepath = './'
-    wordpath = './'
+    filepath = './data/plain_wiki_zh'
+    wordpath = './data/'
 
     optimizer = 'adam'
 
-    max_epochs = 50
+    max_epochs = 5
     pre_trained = False
-    batch_sz = 64
+    batch_sz = 128
     partial_update_until_epoch = 0
-    vocab_sz = 4135
+    vocab_sz = 19853
 
     embed_size = 300
-    hidden_size = 200
+    hidden_size = 400
 
     lr = 0.0001
     decay_steps = 1000
