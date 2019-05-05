@@ -92,9 +92,8 @@ class Train:
                         batch_size=self.config.batch_sz, epoch=self.config.max_epochs)
         my_model = model(self.config)
 
-        est_model = tf.estimator.Estimator(model_fn=my_model,
-                                           model_dir=os.path.join(self.weight_path, 'model'),
-                                           params={})
+        est_model = tf.estimator.Estimator(model_fn=my_model, params={},
+                                           model_dir=os.path.join(self.weight_path, 'model'))
         est_model.train(input_fn=ds_fn)
 
         logging.info("Training complete")
