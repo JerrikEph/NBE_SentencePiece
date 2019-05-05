@@ -86,7 +86,6 @@ class Train:
         _git_head_branch = b_process.communicate()[0].strip()
 
         logging.info('Training start with code version: %s - %s'% (_git_head_hash, _git_head_branch))
-        logging.info("Parameter count is: %d" % self.model.param_cnt)
 
         ds_fn = Dataset(filepath=self.config.filepath, wordpath=self.config.wordpath,
                         batch_size=self.config.batch_sz, epoch=self.config.max_epochs)

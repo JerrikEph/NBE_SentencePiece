@@ -8,7 +8,7 @@ import os, sys, time
 import numpy as np
 import tensorflow as tf
 from tensorflow.contrib import layers
-
+import logging
 from utils import utils, nest
 from utils.TfUtils import entry_stop_gradients, mkMask, reduce_avg, masked_softmax
 
@@ -94,6 +94,7 @@ class model(object):
 
         print('===' * 20)
         print('total reg parameter count: %.3f M' % (self.param_cnt / 1000000.))
+        logging.info("Parameter count is: %d" % self.param_cnt)
         print('excluded variables from regularization')
         print([v.name for v in exclude_vars])
         print('===' * 20)
