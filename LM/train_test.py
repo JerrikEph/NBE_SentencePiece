@@ -23,6 +23,14 @@ parser.add_argument('--debug-enable', action='store_true', dest='debug_enable', 
 args = parser.parse_args()
 
 DEBUG = args.debug_enable
+
+from tensorflow.python.client import device_lib
+
+def get_available_gpus():
+    local_device_protos = device_lib.list_local_devices()
+    return len([x.name for x in local_device_protos if x.device_type == 'GPU'])
+GPU_NUM = len(get_available_gpus())
+
 if not DEBUG:
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -91,8 +99,15 @@ class Train:
                         batch_size=self.config.batch_sz, epoch=self.config.max_epochs)
         my_model = model(self.config)
 
-        est_model = tf.estimator.Estimator(model_fn=my_model, params={},
-                                           model_dir=os.path.join(self.weight_path, 'model'))
+        if GPU_NUM >1:
+            strategy = tf.contrib.distribute.MirroredStrategy(num_gpus=GPU_NUM)
+            config = tf.estimator.RunConfig(train_distribute=strategy)
+
+            est_model = tf.estimator.Estimator(model_fn=my_model, params={}, config=config,
+                                               model_dir=os.path.join(self.weight_path, 'model'))
+        else:
+            est_model = tf.estimator.Estimator(model_fn=my_model, params={},
+                                               model_dir=os.path.join(self.weight_path, 'model'))
         est_model.train(input_fn=ds_fn)
 
         logging.info("Training complete")
