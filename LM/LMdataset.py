@@ -61,6 +61,7 @@ class Dataset:
 
         w2id, id2w = create_vocab(wordspath)
         if isinstance(filenames, list):
+            print('shuffle filenames')
             np.random.shuffle(filenames)
             for f in filenames:
                 for d in read_one_file(f, w2id, maxlen, minlen):
