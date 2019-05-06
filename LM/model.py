@@ -141,8 +141,6 @@ class model(object):
         is_train = True if mode == tf.estimator.ModeKeys.TRAIN else False
         ph_input = features['f_wids']   # shape(b_sz, xlen)
         ph_len = features['f_len']      # shape(b_sz)
-        fwd_label = labels['l_fwd']
-        bwd_label = labels['l_bwd']
         self.embedding = self.add_embedding()
         vocab_sz = self.embedding.get_shape()[0]
         '''shape(b_sz, xlen, emb_sz)'''
@@ -168,6 +166,8 @@ class model(object):
             }
             return tf.estimator.EstimatorSpec(mode, predictions=predictions)
 
+        fwd_label = labels['l_fwd']
+        bwd_label = labels['l_bwd']
         opt_loss = self.add_loss_op(out_logits, (fwd_label, bwd_label),xlen=ph_len)
         train_op = self.add_train_op(opt_loss)
         self.train_op = train_op
