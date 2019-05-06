@@ -128,7 +128,8 @@ class Train:
         my_model = model(self.config)
         estimator = tf.estimator.Estimator(
             my_model, model_dir=os.path.join(self.weight_path, 'model'))
-        estimator.export_saved_model('saved_model', serving_input_receiver_fn)
+        estimator.export_saved_model(os.path.join(self.weight_path, 'saved_model'),
+                                     serving_input_receiver_fn)
 
 
     def main_run(self):
