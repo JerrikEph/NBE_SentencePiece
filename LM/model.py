@@ -10,7 +10,7 @@ import tensorflow as tf
 from tensorflow.contrib import layers
 import logging
 from utils import utils, nest
-from utils.TfUtils import entry_stop_gradients, mkMask, reduce_avg, masked_softmax
+from utils.TfUtils import entry_stop_gradients, mkMask, reduce_avg, entropy_from_logits
 
 NINF = -1e20
 EPSILON = 1e-10
@@ -157,10 +157,18 @@ class model(object):
                                    initializer=tf.zeros_initializer)
         bwd_bias = tf.get_variable('bwddigit_bias', shape=[vocab_sz], dtype=self.embedding.dtype,
                                    initializer=tf.zeros_initializer)
-        out_digits = (tf.tensordot(out_x[0], self.embedding, axes=[[-1], [-1]])+fwd_bias,
+        out_logits = (tf.tensordot(out_x[0], self.embedding, axes=[[-1], [-1]])+fwd_bias,
                       tf.tensordot(out_x[1], self.embedding, axes=[[-1], [-1]])+bwd_bias)
 
-        opt_loss = self.add_loss_op(out_digits, (fwd_label, bwd_label),xlen=ph_len)
+        if mode == tf.estimator.ModeKeys.PREDICT:
+            entropy = [entropy_from_logits(logits) for logits in out_logits]
+            predictions = {
+                'fwd_entropy': entropy[0],
+                'bwd_entropy': entropy[1]
+            }
+            return tf.estimator.EstimatorSpec(mode, predictions=predictions)
+
+        opt_loss = self.add_loss_op(out_logits, (fwd_label, bwd_label),xlen=ph_len)
         train_op = self.add_train_op(opt_loss)
         self.train_op = train_op
         self.opt_loss = opt_loss
@@ -169,6 +177,7 @@ class model(object):
         if mode == tf.estimator.ModeKeys.TRAIN:
             return tf.estimator.EstimatorSpec(
                 mode, loss=opt_loss, train_op=train_op)
+
 
     @staticmethod
     def biLSTM(in_x, xLen, h_sz, scope=None):

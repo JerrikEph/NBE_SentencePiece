@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser(description="training options")
 
 parser.add_argument('--gen-config', action='store_true', dest='gen_config', default=False)
 parser.add_argument('--gpu-num', action='store', dest='gpu_num', default=0, type=int)
-parser.add_argument('--train-test', action='store', dest='train_test', default='train', choices=['train', 'test'])
+parser.add_argument('--train-test', action='store', dest='train_test', default='train', choices=['train', 'export', 'test'])
 parser.add_argument('--weight-path', action='store', dest='weight_path', required=True)
 parser.add_argument('--restore-ckpt', action='store_true', dest='restore_ckpt', default=False)
 parser.add_argument('--retain-gpu', action='store_true', dest='retain_gpu', default=False)
@@ -112,6 +112,24 @@ class Train:
 
         logging.info("Training complete")
 
+    def export_model(self):
+        def serving_input_receiver_fn():
+            """Serving input_fn that builds features from placeholders
+            Returns
+            -------
+            tf.estimator.export.ServingInputReceiver
+            """
+            words = tf.placeholder(dtype=tf.int32, shape=[None, None], name='f_wids')
+            nwords = tf.placeholder(dtype=tf.int32, shape=[None], name='f_len')
+            receiver_tensors = {'f_wids': words, 'f_len': nwords}
+            features = {'f_wids': words, 'f_len': nwords}
+            return tf.estimator.export.ServingInputReceiver(features, receiver_tensors)
+
+        my_model = model(self.config)
+        estimator = tf.estimator.Estimator(
+            my_model, model_dir=os.path.join(self.weight_path, 'model'))
+        estimator.export_saved_model('saved_model', serving_input_receiver_fn)
+
 
     def main_run(self):
 
@@ -128,6 +146,8 @@ class Train:
             logging.basicConfig(filename=logFile, format='%(levelname)s %(asctime)s %(message)s', level=logging.INFO)
             debug('_main_run_')
             self.train_run()
+        elif self.args.train_test == 'export':
+            self.export_model()
         else:
             logging.basicConfig(filename=logFile, format='%(levelname)s %(asctime)s %(message)s', level=logging.INFO)
 

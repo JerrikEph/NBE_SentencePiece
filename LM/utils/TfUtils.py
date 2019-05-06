@@ -2,6 +2,18 @@ import tensorflow as tf
 from . import nest
 import numpy as np
 
+def entropy_from_logits(p_logits):
+    '''
+    Args
+    params p_logits: shape(b_sz, xlen, class)
+    '''
+    logp = p_logits - tf.math.reduce_logsumexp(p_logits,
+                                               axis=-1,
+                                               keep_dims=True)  # shape(b_sz, xlen, class)
+    p = tf.nn.softmax(p_logits, axis=-1)    # shape(b_sz, xlen, class)
+    entro = tf.reduce_sum(-p*logp, axis=-1)            # shape(b_sz, xlen)
+    return entro
+
 def mkMask(input_tensor, maxLen):
     shape_of_input = tf.shape(input_tensor)
     shape_of_output = tf.concat(axis=0, values=[shape_of_input, [maxLen]])
