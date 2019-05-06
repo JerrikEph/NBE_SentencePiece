@@ -11,9 +11,9 @@ class Dataset:
         self.epoch = epoch
 
     def __call__(self, *args, **kwargs):
-        datagen = self.sample_generator(glob.glob(os.path.join(self.filepath, 'wiki_*')),
+        datagen_fn = lambda: self.sample_generator(glob.glob(os.path.join(self.filepath, 'wiki_*')),
                                         os.path.join(self.wordpath, 'words.txt'))
-        ds = tf.data.TextLineDataset.from_generator(lambda: datagen, (tf.int32, tf.int32, tf.int32, tf.int32),
+        ds = tf.data.TextLineDataset.from_generator(datagen_fn, (tf.int32, tf.int32, tf.int32, tf.int32),
                                                     (tf.TensorShape([None]), tf.TensorShape([None]),
                                                      tf.TensorShape([None]), tf.TensorShape([])))
         ds = ds.repeat(self.epoch)
