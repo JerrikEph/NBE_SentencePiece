@@ -17,9 +17,9 @@ class Dataset:
                                                     (tf.TensorShape([None]), tf.TensorShape([None]),
                                                      tf.TensorShape([None]), tf.TensorShape([])))
         ds = ds.shuffle(buffer_size=100000)
-        ds = ds.repeat(self.epoch)
         ds = ds.padded_batch(self.batch_size, (tf.TensorShape([None]),tf.TensorShape([None]),
                                                tf.TensorShape([None]),tf.TensorShape([])))
+        ds = ds.repeat(self.epoch)
         ds = ds.map(lambda a, b, c, d: ({'f_wids': a, 'f_len': d}, {'l_fwd': b, 'l_bwd': c}))
         ds = ds.prefetch(10)
 
