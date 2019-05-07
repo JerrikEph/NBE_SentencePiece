@@ -4,6 +4,7 @@ _*
 data
 data_*
 savings/
+jnote/
 .idea/*
 !.gitignore
 !__init__.py
