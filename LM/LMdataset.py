@@ -26,7 +26,7 @@ class Dataset:
         return ds
 
     @staticmethod
-    def sample_generator(filenames, wordspath, maxlen=100, minlen=10):
+    def sample_generator(filenames, wordspath, maxlen=1000, minlen=10):
         def create_vocab(wpath):
             w2id = {}
             id2w = {}
